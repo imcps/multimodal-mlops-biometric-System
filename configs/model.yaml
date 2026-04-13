@@ -1,0 +1,3 @@
+embedding_dim: 128
+num_classes: 45
+fusion: concat

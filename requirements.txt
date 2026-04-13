@@ -1,0 +1,23 @@
+# Core ML
+torch
+torchvision
+numpy
+
+# Image I/O
+Pillow
+opencv-python
+
+# Data engineering
+pyarrow
+
+# Parallel preprocessing
+ray
+
+# Experiment tracking
+tensorboard
+
+# Configuration / utilities
+pyyaml
+
+# Testing
+pytest

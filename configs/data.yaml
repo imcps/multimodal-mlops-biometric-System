@@ -1,0 +1,4 @@
+parquet_path: data/processed/biometric.parquet
+batch_size: 32
+num_workers: 4
+image_size: 64

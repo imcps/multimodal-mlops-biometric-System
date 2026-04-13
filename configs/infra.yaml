@@ -1,0 +1,2 @@
+device: cpu
+use_ray: true
