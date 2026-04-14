@@ -1,3 +1,26 @@
+"""
+Multimodal biometric inference script.
+
+This script loads a trained multimodal biometric model and performs
+inference on iris and fingerprint data stored in a Parquet file.
+The model uses modality-specific encoders followed by a fusion module
+to produce classification logits.
+
+Key features:
+- Deterministic evaluation via `torch.no_grad()`
+- Support for loading trained weights from a checkpoint
+- Batched inference using PyTorch DataLoader
+- Early stopping after a fixed number of predictions for quick testing
+
+Typical usage:
+    python inference.py
+
+Inputs:
+- Parquet dataset containing iris and fingerprint features
+
+Outputs:
+- Printed sample predictions from the trained (or randomly initialized) model
+"""
 import os
 import torch
 from torch.utils.data import DataLoader
@@ -49,10 +72,10 @@ def main():
     if os.path.exists(CHECKPOINT_PATH):
         load_checkpoint(model, optimizer=None, checkpoint_path=CHECKPOINT_PATH)
     else:
-        print("⚠️ No checkpoint found, running with random weights")
+        print("No checkpoint found, running with random weights")
 
     preds = run_inference(model, loader)
-    print("✅ Inference finished")
+    print("Inference finished")
     print("Sample predictions:", preds[:10])
 
 

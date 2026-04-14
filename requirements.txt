@@ -1,23 +1,23 @@
-# Core ML
-torch
-torchvision
-numpy
+# Core ML (CUDA-enabled)
+torch==2.3.1
+torchvision==0.18.1
+numpy==1.26.4
 
 # Image I/O
-Pillow
-opencv-python
+Pillow==10.3.0
+opencv-python==4.9.0.80
 
 # Data engineering
-pyarrow
+pyarrow==15.0.2
 
 # Parallel preprocessing
-ray
+ray==2.10.0
 
 # Experiment tracking
-tensorboard
+tensorboard==2.16.2
 
-# Configuration / utilities
-pyyaml
+# Configuration
+pyyaml==6.0.1
 
 # Testing
-pytest
+pytest==8.1.1

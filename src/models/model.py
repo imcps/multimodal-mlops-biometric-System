@@ -29,4 +29,3 @@ class MultiModalModel(nn.Module):
         z_fp = self.fp_encoder(batch["fingerprint"])
 
         return self.fusion(z_iris, z_fp)
-``

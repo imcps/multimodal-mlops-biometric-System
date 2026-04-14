@@ -30,4 +30,3 @@ class FingerprintDataset(BaseImageDataset):
             "image": image,
             "label": label,
         }
-``

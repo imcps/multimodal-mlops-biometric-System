@@ -36,4 +36,3 @@ class ConcatFusion(nn.Module):
             "logits": logits,
             "loss": loss,
         }
-``

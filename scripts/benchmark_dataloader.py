@@ -28,14 +28,14 @@ def benchmark_dataloader(num_workers: int, batch_size: int, num_batches: int = 5
     elapsed = time.time() - start
 
     print(
-        f"✅ num_workers={num_workers}, "
+        f"num_workers={num_workers}, "
         f"batch_size={batch_size}, "
         f"time={elapsed:.2f}s"
     )
 
 
 def main():
-    print("📊 DataLoader Benchmarking\n")
+    print("DataLoader Benchmarking\n")
 
     for num_workers in [0, 2, 4]:
         benchmark_dataloader(

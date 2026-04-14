@@ -1,5 +1,5 @@
 from PIL import Image
-from src.utils.transforms import get_image_transform
+from src.utils.transform import get_image_transform
 
 
 # Default transform (can be overridden later if needed)

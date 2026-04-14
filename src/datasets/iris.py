@@ -30,4 +30,3 @@ class IrisDataset(BaseImageDataset):
             "image": image,
             "label": label,
         }
-``

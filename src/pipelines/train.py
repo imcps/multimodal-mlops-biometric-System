@@ -1,3 +1,27 @@
+"""
+Multimodal biometric training script.
+
+This script trains a multimodal deep learning model using iris and fingerprint
+biometric data stored in a Parquet file. Each modality is encoded separately,
+fused via concatenation, and optimized end-to-end for multi-class classification.
+
+Key features:
+- Reproducible training via deterministic seeding
+- Modular dataset design (Iris, Fingerprint, and MultiModal datasets)
+- Pluggable encoder and fusion architectures
+- TensorBoard logging for training metrics
+- Profiling hooks for forward/backward timing
+- Checkpointing with resume support
+
+Typical usage:
+    python train.py              # start training from scratch
+    python train.py --resume     # resume from latest checkpoint
+
+Artifacts:
+- TensorBoard logs: runs/
+- Checkpoints: checkpoints/latest.pt
+"""
+
 import os
 import torch
 from torch.utils.data import DataLoader
@@ -22,6 +46,34 @@ CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "latest.pt")
 
 
 def train_one_epoch(model, loader, optimizer, writer, epoch):
+
+    """
+        Run one training epoch over the dataset.
+
+        This function performs forward and backward passes for each batch,
+        updates model parameters, logs training loss to TensorBoard, and
+        measures execution time for profiling purposes.
+
+        Args:
+            model (torch.nn.Module):
+                The multimodal model containing modality-specific encoders
+                and a fusion/classification head.
+            loader (torch.utils.data.DataLoader):
+                DataLoader providing batches from the MultiModalDataset.
+            optimizer (torch.optim.Optimizer):
+                Optimizer used to update model parameters.
+            writer (torch.utils.tensorboard.SummaryWriter):
+                TensorBoard writer for logging training metrics.
+            epoch (int):
+                Current epoch index (0-based), used for global step calculation.
+
+        Notes:
+            - Only the first 10 batches are processed per epoch to enable
+            fast debugging and profiling.
+            - The model return a dictionary containing a
+            scalar `loss` entry.
+        """
+
     model.train()
 
     for batch_idx, batch in enumerate(loader):
@@ -35,11 +87,37 @@ def train_one_epoch(model, loader, optimizer, writer, epoch):
         global_step = epoch * len(loader) + batch_idx
         writer.add_scalar("train/loss", loss.item(), global_step)
 
-        if batch_idx >= 10:  # keep runtime small
+        if batch_idx >= 10:
             break
 
 
 def main(resume: bool = False):
+
+    """
+        Entry point for multimodal biometric model training.
+
+        This function sets up reproducibility, logging, datasets, model,
+        optimizer, and the training loop. It optionally resumes training
+        from a previously saved checkpoint.
+
+        Args:
+            resume (bool, optional):
+                If True, attempts to load model and optimizer state from
+                the latest checkpoint before continuing training.
+                Defaults to False.
+
+        Workflow:
+            1. Set random seeds for reproducibility
+            2. Initialize TensorBoard logging
+            3. Load iris and fingerprint datasets from Parquet storage
+            4. Construct multimodal dataset and DataLoader
+            5. Initialize encoders, fusion module, and full model
+            6. Resume from checkpoint if enabled
+            7. Train for a fixed number of epochs
+            8. Save checkpoints after each epoch
+
+        """
+
     # -----------------------
     # Reproducibility
     # -----------------------
@@ -95,7 +173,7 @@ def main(resume: bool = False):
     num_epochs = 3
 
     for epoch in range(start_epoch, num_epochs):
-        print(f"🚀 Epoch {epoch}")
+        print(f" Epoch {epoch}")
         train_one_epoch(model, loader, optimizer, writer, epoch)
 
         # Save checkpoint after every epoch
@@ -108,9 +186,8 @@ def main(resume: bool = False):
         )
 
     writer.close()
-    print("✅ Training finished")
+    print("Training finished")
 
 
 if __name__ == "__main__":
-    # Set resume=True to continue training
     main(resume=True)
